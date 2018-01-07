@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=0.8">
+	<title>Learn English Verbs</title>
+	<script type="text/javascript">
+		var verbs={"irregulars":[["to speak","spoke","spoken","speaking","hablar"],["to do","did","done","doing","hacer"],["to hurt","hurt","hurt","hurting","herir"],["to go","went","gone","going","ir"],["to read","read","read","reading","leer"],["to become","became","become","becoming","llegar a ser"],["to send","sent","sent","sending","mandar"],["to drive","drove","driven","driving","manejar"],["to swim","swam","swum","swimming","nadar"],["to hear","heard","heard","hearing","oir"],["to forget","forgot","forgotten","forgetting","olvidar"],["to pay","paid","paid","paying","pagar"],["to stand","stood","stood","standing","pararse"],["to hit","hit","hit","hitting","pegar"],["to think","thought","thought","thinking","pensar"],["to lose","lost","lost","losing","perder"],["to let","let","let","letting","permitir"],["to put","put","put","putting","poner"],["to lend","lent","lent","lending","prestar"],["to steal","stole","stolen","stealing","robar"],["to break","broke","broken","breaking","romper"],["to shake","shook","shaken","shaking","sacudir"],["to leave","left","left","leaving","salir"],["to sit","sat","sat","sitting","sentarse"],["to feel","felt","felt","feeling","sentir"],["to be","was, were","been","being","ser, estar"],["to dream","dreamt","dreamt","dreaming","soñar"],["to hold","held","held","holding","sostener"],["to have-has","had","had","having","tener, haber"],["to throw","threw","thrown","throwing","tirar, aventar"],["to take","took","taken","taking","tomar, llevar"],["to bring","brought","brought","bringing","traer"],["to wear","wore","worn","wearing","usar"],["to sell","sold","sold","selling","vender"],["to come","came","come","coming","venir"],["to see","saw","seen","seeing","ver"],["to fly","flew","flown","flying","volar"]]};
+		var combs = 
+				[
+					[[0,1,2,3],[0,1,2,4],[0,1,3,4],[0,2,3,4],[1,2,3,4]],
+					[[0,1,2],[0,1,3],[0,1,4],[0,2,3],[0,2,4],[0,3,4],[1,2,3],[1,2,4],[1,3,4],[2,3,4]],
+					[[0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]],
+					[[0],[1],[2],[3],[4]]
+				];
+		var left = 
+				[
+					[[4],[3],[2],[1],[0]],
+					[[3,4],[2,4],[2,3],[1,4],[1,3],[1,2],[0,4],[0,3],[0,2],[0,1]],
+					[[2,3,4],[1,3,4],[1,2,4],[1,2,3],[0,3,4],[0,2,4],[0,2,3],[0,1,4],[0,1,3],[0,1,2]],
+					[[1,2,3,4],[0,2,3,4],[0,1,3,4],[0,1,2,4],[0,1,2,3]]
+				];
+		var diffColors = ["#099b1c","#bbdd0f","#d86813","#cc0a0a"];
+		var diffTags = ["MIN","LOW","MEDIUM","MAX"];
+	</script>
+	<style type="text/css">
+		input[type=range]::-webkit-slider-runnable-track{
+			background-color: #bbdd0f;
+		}
+
+		#giveup, #next{
+			width: 100px;
+		}
+
+		#diff-container{
+			text-align: center;
+			margin: 0 auto;
+			background-image: "tree.png";
+		}
+		
+		body, html{
+			margin:0px;
+		}
+
+		body, input{
+			font-family: 'Pavanam', sans-serif;
+
+		}
+		h1{margin:0px;}
+
+		#title{
+			padding-top: 20px;
+			width: 100%;
+			height: 80px;
+			background-color: #bbdd0f;
+			color: white;
+			transition: all 1s ease-in;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		#diff-tag{
+			color: #bbdd0f;
+			font-size: 26px;
+			font-weight: 800;
+			float: left;
+			width: 39%;
+			transition: all 1s ease-in;
+		}
+
+		#diff-title{
+			font-size: 24px;
+			float: left;
+			width: 49%;
+			margin-bottom: 15px;
+		}
+
+		#diff{
+			margin-bottom: 20px;
+
+		}
+
+		#text-fields{
+			text-align: center;
+			margin: 20px auto 20px auto;
+			display: inline-block;
+			width: 100%;
+		}
+
+		input[type="text"]{
+			font-size: 22px;
+			margin: 5px 10px 10px 10px;
+			border-radius: 3px;
+		}
+
+		input[type="button"]{
+			margin: 15px auto;
+			font-size: 22px;
+			background-color: white;
+			box-shadow: 0px 0px 15px 3px grey;
+		}
+		input[type=range] {
+		  -webkit-appearance: none;
+		  width: 100%;
+		  margin: 5.85px 0;
+		}
+		input[type=range]:focus {
+		  outline: none;
+		}
+		input[type=range]::-webkit-slider-runnable-track {
+		  width: 100%;
+		  height: 11.3px;
+		  cursor: pointer;
+		  box-shadow: 0.9px 0.9px 1.7px #002200, 0px 0px 0.9px #003c00;
+		  border-radius: 1px;
+		  border: 1.1px solid #18d501;
+		  transition: all 1s ease-in;
+		}
+		input[type=range]::-webkit-slider-thumb {
+		  box-shadow: 2.6px 2.6px 3.7px #00aa00, 0px 0px 2.6px #00c300;
+		  border: 2.5px solid #83e584;
+		  height: 23px;
+		  width: 23px;
+		  border-radius: 12px;
+		  background: #5e8d6d;
+		  cursor: pointer;
+		  -webkit-appearance: none;
+		  margin-top: -6.95px;
+		}
+
+		input[type="text"]:disabled{
+			background-color: #eee;
+		}
+
+	</style>
+	<link href="https://fonts.googleapis.com/css?family=Pavanam" rel="stylesheet">
+</head>
+<body>
+<div id="title">
+	<h1>Fill in the empty fields</h1>	
+</div>
+<div id="diff-container" style="width: 350px;">
+	<div id="diff-title">Difficulty: </div>
+	<div id="diff-tag">LOW</div>
+	<input type="range" min="0" max="3" step="1" id="diff" style="width: 100%;" value="1">
+	<img src="marks.png" style="position: relative; bottom: 40px;z-index: -3;">
+</div>
+<div id="text-fields">
+	<input type="text" name="present" id="0" placeholder="Present">
+	<input type="text" name="past" id="1" placeholder="Past">
+	<input type="text" name="participle" id="2" placeholder="Participle">
+	<input type="text" name="gerund" id="3" placeholder="Gerund">
+	<input type="text" name="spanish" id="4" placeholder="Spanish">	
+</div>
+<input type="button" name="giveup" value="Give up :(" id="giveup">
+<input type="button" name="next" value="Next" id="next">
+<script type="text/javascript">
+	var wordsLeft = 0;
+	var randomInd = 0;
+	var words = [];
+	var diff = 0;
+	var randomComb = 0;
+	var randomFields = [];
+	var leftFields = [];
+
+	window.onload = generate();
+
+	document.getElementById("next").addEventListener("click", generate);
+	document.getElementById("giveup").addEventListener("click", giveup);
+	document.getElementById("diff").addEventListener("input", function(){
+		document.getElementById("title").style.backgroundColor = diffColors[document.getElementById("diff").value];
+		document.styleSheets[0].deleteRule(0);
+		document.styleSheets[0].insertRule("input[type=range]::-webkit-slider-runnable-track { background-color: "+diffColors[document.getElementById("diff").value]+"; }", 0);
+		document.getElementById("diff-tag").style.color = diffColors[document.getElementById("diff").value];
+		document.getElementById("diff-tag").innerHTML = diffTags[document.getElementById("diff").value];
+		generate();
+	});
+
+	function generate(){
+		randomInd = parseInt(Math.random()*(verbs["irregulars"].length));
+		words = verbs["irregulars"][randomInd];
+		diff = document.getElementById("diff").value;
+		randomComb = parseInt(Math.random()*(combs[diff].length));
+		randomFields = combs[diff][randomComb];
+		leftFields = left[diff][randomComb];
+
+		for(var i = 0; i < randomFields.length; i++){
+			var old_element = document.getElementById(randomFields[i]);
+			var new_element = old_element.cloneNode(true);
+			old_element.parentNode.replaceChild(new_element, old_element);
+			document.getElementById(randomFields[i]).value = words[randomFields[i]];
+			document.getElementById(randomFields[i]).style.boxShadow = "";
+			document.getElementById(randomFields[i]).disabled = true;
+		}
+		for(var i = 0; i < leftFields.length; i++){
+			var old_element = document.getElementById(leftFields[i]);
+			var new_element = old_element.cloneNode(true);
+			old_element.parentNode.replaceChild(new_element, old_element);
+			document.getElementById(leftFields[i]).value = "";
+			document.getElementById(leftFields[i]).style.boxShadow = "";
+			document.getElementById(leftFields[i]).disabled = false;
+			document.getElementById(leftFields[i]).addEventListener("input",function(){
+				if(this.value.toLowerCase() == words[this.id]){
+					this.style.boxShadow = "0px 0px 5px 5px green";
+					this.disabled = true;
+					wordsLeft++;
+					console.log(this);
+					console.log("correctas: "+wordsLeft);
+					console.log("necesarias: "+(parseInt(document.getElementById("diff").value)+1));
+					console.log("");
+				}
+				if(wordsLeft == (parseInt(document.getElementById("diff").value)+1)){
+					document.getElementById("next").style.display="block";
+					document.getElementById("giveup").style.display="none";
+				}
+			});
+		}
+		document.getElementById("next").style.display="none";
+		document.getElementById("giveup").style.display="block";
+		wordsLeft = 0;
+	}
+
+	function giveup(){
+		for(var i = 0; i < leftFields.length; i++){
+			document.getElementById(leftFields[i]).value = words[leftFields[i]];
+			document.getElementById(leftFields[i]).style.boxShadow = "0px 0px 5px 5px green";
+			document.getElementById(leftFields[i]).disabled = true;
+			document.getElementById("next").style.display="block";
+			document.getElementById("giveup").style.display="none";
+		}
+	}
+	
+</script>
+
+
+</body>
+</html>
