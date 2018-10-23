@@ -1,0 +1,13 @@
+@font-face {
+    font-family: computer-modern;
+    src: url(../fonts/cmunorm.ttf);
+}
+
+body, html{
+	font-family: computer-modern;
+}
+
+select, input{
+	font-family: computer-modern;
+}
+
