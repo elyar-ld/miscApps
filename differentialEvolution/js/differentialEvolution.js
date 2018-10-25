@@ -50,7 +50,6 @@ function mutation(population, F, vector, numberOfVectors){
 				index += 1;
 			}
 		}
-		console.log("randomIndexes: "+randomIndexes);
 		var mutant = [];
 		var firstElement = [];
 		if(vector === "rand") firstElement = population[randomIndexes[randomIndexes.length-1]].vars;
@@ -59,7 +58,6 @@ function mutation(population, F, vector, numberOfVectors){
 			for (var i = 0; i < population[p].vars.length; i++)
 				firstElement[i] = population[p].vars[i] + F*(bestVector[i] - population[p].vars[i]);
 		}
-		console.log("firstElement: "+firstElement);
 		for (var i = 0; i < population[0].vars.length; i++){
 			var sumRand = 0.0;
 			for (var j = 0; j < randomIndexes.length-1; j += 2)
@@ -75,19 +73,22 @@ function recombination(population, mutants, Cr, type){
 	var trials = [];
 	if (type === "bin"){
 		for(var i = 0; i < population.length; i++){
-			var trial = population[i].vars;
 			var K = parseInt(Math.random()*population[i].vars.length);
-			for (var j = 0; j < population[i].vars.length; j++)
+			var trial = [];
+			for (var j = 0; j < population[i].vars.length; j++){
 				if(j === K || Math.random() <= Cr) trial[j] = mutants[i][j];
+				else trial[j] = population[i].vars[j];
+			}
 			trials[i]= trial;
 		}	
 	}
 	else if(type === "exp"){
 		for(var i = 0; i < population.length; i++){
-			var trial = population[i].vars;
+			var trial = []
+			for (var j = 0; j < population[i].vars.length; j++)
+				trial[j] = population[i].vars[j];
 			var n = parseInt(Math.random()*population[i].vars.length);
 			for (var L = 0; L < population[i].vars.length-1 && Math.random() < Cr; L++){
-				console.log("L: "+L+" - n: "+n);
 				trial[(n+L)%(trial.length)] = mutants[i][(n+L)%(trial.length)];
 			}
 			trials[i]= trial;
@@ -108,11 +109,11 @@ function selection(population, trials){
 	return population;
 }
 
-function DE(size, F, Cr, GEN, bounds,x,y,z,s){
+function DE(size, F, Cr, GEN, bounds){
 	var population = initialization(size, bounds);
 	for (var g = 0; g < GEN; g++){
-		var mutants = mutation(population, F);
-		var trials = recombination(population, mutants, Cr);
+		var mutants = mutation(population, F, "rand", 1);
+		var trials = recombination(population, mutants, Cr, "bin");
 		population = selection(population, trials);
 	}
 	console.log(findBest(population));
@@ -129,5 +130,6 @@ function of(vars){
 		Math.sqrt(phi**2+(5*Math.sqrt(200)-vars[5])**2)/10;
 	return value;*/
 	//return -1*Math.cos(vars[0])*Math.cos(vars[1])*Math.exp(-1*((vars[0]-Math.PI)**2+(vars[1]-Math.PI)**2));
-	return Math.sin(3*Math.PI*vars[0])**2+((vars[0]-1)**2)*(1+Math.sin(3*Math.PI*vars[1])**2)+((vars[1]-1)**2)*(1+Math.sin(2*Math.PI*vars[1])**2);
+	//return Math.sin(3*Math.PI*vars[0])**2+((vars[0]-1)**2)*(1+Math.sin(3*Math.PI*vars[1])**2)+((vars[1]-1)**2)*(1+Math.sin(2*Math.PI*vars[1])**2);
+	return (vars[0]**2+vars[1]**2);
 }
