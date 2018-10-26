@@ -1,0 +1,29 @@
+table table td{
+	border: 1px solid black;
+	font-size: 11px;
+	font-family: sans-serif;
+	
+	width: 18px;
+	height: 18px;
+	text-align: center;
+}
+.dede:hover{
+	background-color: red;
+}
+
+#up-instructions, #left-instructions{
+	background-color: #eee;
+}
+
+.fifthColumn{
+	border-right: 2px solid #333;
+}
+.fifthRow{
+	border-bottom: 2px solid #333;
+}
+
+table table{
+	border-collapse: collapse;
+	border-spacing: 0;
+	border: 2px solid black !important;
+}

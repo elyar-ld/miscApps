@@ -1,0 +1,137 @@
+body,html{
+	font-family: sans-serif;
+	margin:0;
+	padding: 0;
+	color:#fff;
+	background-color: #141414;
+}
+
+#board{
+	position: relative;
+}
+
+#board .tile{
+	background-size: 500%;
+	width: 12.5%;
+	padding-top: 12.5%;
+	display: inline-block;
+}
+
+#numbers{
+	position: absolute;
+	top:3%;
+	left: 1%;
+	height: 100%;
+}
+
+#letters{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+#letters .tile{
+	width: 12.5%;
+	font-size: 12px;
+	text-align: center;
+	color: #FFF;
+	padding-top: 0;
+}
+
+#numbers .tile{
+	height: 12.5%;
+	font-size: 12px;
+	text-align: center;
+	color: #FFF;
+	display: block;
+}
+
+#board div{
+	padding: 0;
+	margin: 0;
+	font-size: 0;
+}
+
+#numbers td{
+	height: 60px;
+}
+
+#letters td{
+	width: 60px;
+	text-align: center;
+}
+
+#controls, #coordinateContainer{
+	width:100%;
+}
+
+#controls{
+	position: fixed;
+	bottom: 0;
+}
+
+#coordinateContainer{
+	height: 45px;
+}
+#coordinateContainer h3{
+	font-weight: 100;
+    margin: 0;
+    font-size: 34px;
+}
+
+#coordinate{
+	text-align: center;
+}
+
+#controls div{
+	display: inline-block;	
+}
+
+#startContainer{
+	width:30%;
+}
+
+#scoreContainer{
+	width: 38%;
+	text-align: center;
+}
+
+#answerContainer{
+	position: fixed;
+	right: 1px;
+	bottom: 1px;
+	width: 29%;
+	text-align: center;
+}
+
+#answerImage{
+	width: 80%;
+}
+
+#start{
+	width: 100%;
+	height: 7vh;
+	background-color: #502900;
+	border: none;
+	color: #FFF;
+	border-radius: 10px;
+	cursor: pointer;
+	outline: none;
+}
+
+.fadeIn{
+	opacity: 1.0;
+	transition: all 0.25s ease;
+}
+.fadeOut{
+	opacity: 0.0;
+	transition: all 0.25s ease;
+}
+
+#conf{
+	font-size:30px;
+	cursor:pointer;
+	position:fixed;
+	top:0;
+	left: 5px;
+}
