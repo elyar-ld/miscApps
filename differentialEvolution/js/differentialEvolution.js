@@ -16,7 +16,7 @@ function initialization(size, bounds){
 		var varsVals = [];
 		population[i] = {};
 		for(var j = 0; j < bounds.length; j++){
-			varsVals[j] = Math.random() * (bounds[j].max - bounds[j].min) + bounds[j].min;
+			varsVals[j] = rand.nextFloat() * (bounds[j].max - bounds[j].min) + bounds[j].min;
 		}
 		population[i].vars = varsVals;
 		population[i].val = of(varsVals);
@@ -36,7 +36,7 @@ function mutation(population, F, vector, numberOfVectors){
 		var randomIndexes = [];
 		var index = 0;
 		while(randomIndexes.length < (numberOfVectors*2)+randNum){
-			randomIndex = parseInt(Math.random()*population.length);
+			randomIndex = parseInt(rand.nextFloat()*population.length);
 			if(randomIndex === p) continue;
 			var contained = false;
 			for(var i = 0; i < randomIndexes.length; i++){
@@ -73,10 +73,10 @@ function recombination(population, mutants, Cr, type){
 	var trials = [];
 	if (type === "bin"){
 		for(var i = 0; i < population.length; i++){
-			var K = parseInt(Math.random()*population[i].vars.length);
+			var K = parseInt(rand.nextFloat()*population[i].vars.length);
 			var trial = [];
 			for (var j = 0; j < population[i].vars.length; j++){
-				if(j === K || Math.random() <= Cr) trial[j] = mutants[i][j];
+				if(j === K || rand.nextFloat() <= Cr) trial[j] = mutants[i][j];
 				else trial[j] = population[i].vars[j];
 			}
 			trials[i]= trial;
@@ -87,8 +87,8 @@ function recombination(population, mutants, Cr, type){
 			var trial = []
 			for (var j = 0; j < population[i].vars.length; j++)
 				trial[j] = population[i].vars[j];
-			var n = parseInt(Math.random()*population[i].vars.length);
-			for (var L = 0; L < population[i].vars.length-1 && Math.random() < Cr; L++){
+			var n = parseInt(rand.nextFloat()*population[i].vars.length);
+			for (var L = 0; L < population[i].vars.length-1 && rand.nextFloat() < Cr; L++){
 				trial[(n+L)%(trial.length)] = mutants[i][(n+L)%(trial.length)];
 			}
 			trials[i]= trial;
@@ -109,11 +109,13 @@ function selection(population, trials){
 	return population;
 }
 
-function DE(size, F, Cr, GEN, bounds){
+function DE(size, F, Cr, GEN, bounds, x, y, z, s, seed = Math.floor(Math.random()*2147483647)){
+	rand = new Random(seed)
 	var population = initialization(size, bounds);
+	
 	for (var g = 0; g < GEN; g++){
-		var mutants = mutation(population, F, "rand", 1);
-		var trials = recombination(population, mutants, Cr, "bin");
+		var mutants = mutation(population, F, x, y);
+		var trials = recombination(population, mutants, Cr, z);
 		population = selection(population, trials);
 	}
 	console.log(findBest(population));
@@ -133,3 +135,16 @@ function of(vars){
 	//return Math.sin(3*Math.PI*vars[0])**2+((vars[0]-1)**2)*(1+Math.sin(3*Math.PI*vars[1])**2)+((vars[1]-1)**2)*(1+Math.sin(2*Math.PI*vars[1])**2);
 	return (vars[0]**2+vars[1]**2);
 }
+
+function Random(seed) {
+  this._seed = seed % 2147483647;
+  if (this._seed <= 0) this._seed += 2147483646;
+}
+Random.prototype.next = function () {
+  return this._seed = this._seed * 16807 % 2147483647;
+};
+Random.prototype.nextFloat = function (opt_minOrMax, opt_max) {
+  return (this.next() - 1) / 2147483646;
+};
+
+var rand = null;
