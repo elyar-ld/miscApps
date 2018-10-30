@@ -10,6 +10,8 @@ function findBest(population){
 	return population[bestIndex].vars;
 }
 
+
+
 function initialization(size, bounds){
 	var population = [];
 	for(var i = 0; i < size; i++){
@@ -52,8 +54,14 @@ function mutation(population, F, vector, numberOfVectors){
 		}
 		var mutant = [];
 		var firstElement = [];
-		if(vector === "rand") firstElement = population[randomIndexes[randomIndexes.length-1]].vars;
-		else if(vector === "best") firstElement = bestVector;
+		if(vector === "rand"){
+			for(var i = 0; i < population[randomIndexes[randomIndexes.length-1]].vars.length; i++)
+				firstElement[i]= population[randomIndexes[randomIndexes.length-1]].vars[i];
+		} 
+		else if(vector === "best"){
+			for(let i = 0, length1 = bestVector.length; i < length1; i++)
+				firstElement[i] = bestVector[i];
+		} 
 		else if(vector === "current-to-best"){
 			for (var i = 0; i < population[p].vars.length; i++)
 				firstElement[i] = population[p].vars[i] + F*(bestVector[i] - population[p].vars[i]);
@@ -110,7 +118,7 @@ function selection(population, trials){
 }
 
 function DE(size, F, Cr, GEN, bounds, x, y, z, s, seed = Math.floor(Math.random()*2147483647)){
-	rand = new Random(seed)
+	rand = new Random(seed);
 	var population = initialization(size, bounds);
 	
 	for (var g = 0; g < GEN; g++){
@@ -144,7 +152,7 @@ Random.prototype.next = function () {
   return this._seed = this._seed * 16807 % 2147483647;
 };
 Random.prototype.nextFloat = function (opt_minOrMax, opt_max) {
-  return (this.next() - 1) / 2147483646;
+	return (this.next() - 1) / 2147483646;;
 };
 
 var rand = null;
