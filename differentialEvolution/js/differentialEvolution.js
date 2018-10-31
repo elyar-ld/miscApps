@@ -1,47 +1,54 @@
-function findBest(population){
-	var bestVal = 0.0.MAX_VALUE;
-	var bestIndex = 0;
-	for (var i = 0; i < population.length; i++){
-		if(population[i].val < bestVal){
-			bestVal = population[i].val;
-			bestIndex = i;
+const helpers ={
+	findBest : function(population){
+		var bestVal = 1.7976931348623157e+308;
+		var bestIndex = 0;
+		for (var i = 0; i < population.length; i++){
+			if(population[i].val < bestVal){
+				bestVal = population[i].val;
+				bestIndex = i;
+			}
 		}
+		return population[bestIndex].vars;
+	},
+	copyArray : function(array){
+		let newArray = [];
+		for(let i = 0 , length = array.length; i < length; i++)
+			newArray[i] = array[i];
+		return newArray;
 	}
-	return population[bestIndex].vars;
 }
 
-
-
 function initialization(size, bounds){
-	var population = [];
+	let population = [];
 	for(var i = 0; i < size; i++){
 		var varsVals = [];
 		population[i] = {};
 		for(var j = 0; j < bounds.length; j++){
 			varsVals[j] = rand.nextFloat() * (bounds[j].max - bounds[j].min) + bounds[j].min;
 		}
-		population[i].vars = varsVals;
+		population[i].vars = helpers.copyArray(varsVals);
 		population[i].val = of(varsVals);
 	}
+	console.log(population);
 	return population;
 }
 
 function mutation(population, F, vector, numberOfVectors){
-	var mutants = [];
-	var bestVector = [];
-	var randNum = 1;
+	let mutants = [];
+	let bestVector = [];
+	let randNum = 1;
 	if(vector !== "rand"){
-		bestVector = findBest(population);
+		bestVector = helpers.findBest(population);
 		randNum = 0;
 	}
-	for(var p = 0; p < population.length; p++){
-		var randomIndexes = [];
-		var index = 0;
+	for(let p = 0, length = population.length; p < length; p++){
+		let randomIndexes = [];
+		let index = 0;
 		while(randomIndexes.length < (numberOfVectors*2)+randNum){
 			randomIndex = parseInt(rand.nextFloat()*population.length);
 			if(randomIndex === p) continue;
-			var contained = false;
-			for(var i = 0; i < randomIndexes.length; i++){
+			let contained = false;
+			for(let i = 0, length = randomIndexes.length; i < length; i++){
 				if (randomIndexes[i] === randomIndex){
 					contained = true;
 					break;
@@ -52,16 +59,10 @@ function mutation(population, F, vector, numberOfVectors){
 				index += 1;
 			}
 		}
-		var mutant = [];
-		var firstElement = [];
-		if(vector === "rand"){
-			for(var i = 0; i < population[randomIndexes[randomIndexes.length-1]].vars.length; i++)
-				firstElement[i]= population[randomIndexes[randomIndexes.length-1]].vars[i];
-		} 
-		else if(vector === "best"){
-			for(let i = 0, length1 = bestVector.length; i < length1; i++)
-				firstElement[i] = bestVector[i];
-		} 
+		let mutant = [];
+		let firstElement = [];
+		if(vector === "rand") firstElement = helpers.copyArray(population[randomIndexes[randomIndexes.length-1]].vars);
+		else if(vector === "best") firstElement = helpers.copyArray(bestVector);
 		else if(vector === "current-to-best"){
 			for (var i = 0; i < population[p].vars.length; i++)
 				firstElement[i] = population[p].vars[i] + F*(bestVector[i] - population[p].vars[i]);
@@ -72,37 +73,27 @@ function mutation(population, F, vector, numberOfVectors){
 				sumRand += F*(population[randomIndexes[j]].vars[i] - population[randomIndexes[j+1]].vars[i]);
 			mutant[i] = firstElement[i] + sumRand;
 		}
-		mutants[p] = mutant;
+		mutants[p] = helpers.copyArray(mutant);
 	}
 	return mutants;
 }
 
 function recombination(population, mutants, Cr, type){
 	var trials = [];
-	if (type === "bin"){
-		for(var i = 0; i < population.length; i++){
+	for(var i = 0; i < population.length; i++){
+		var trial = helpers.copyArray(population[i].vars);
+		if (type === "bin"){
 			var K = parseInt(rand.nextFloat()*population[i].vars.length);
-			var trial = [];
-			for (var j = 0; j < population[i].vars.length; j++){
-				if(j === K || rand.nextFloat() <= Cr) trial[j] = mutants[i][j];
-				else trial[j] = population[i].vars[j];
-			}
-			trials[i]= trial;
-		}	
-	}
-	else if(type === "exp"){
-		for(var i = 0; i < population.length; i++){
-			var trial = []
 			for (var j = 0; j < population[i].vars.length; j++)
-				trial[j] = population[i].vars[j];
+				if(j === K || rand.nextFloat() <= Cr) trial[j] = mutants[i][j];	
+		}
+		else if(type === "exp"){
 			var n = parseInt(rand.nextFloat()*population[i].vars.length);
-			for (var L = 0; L < population[i].vars.length-1 && rand.nextFloat() < Cr; L++){
+			for (var L = 0; L < population[i].vars.length-1 && rand.nextFloat() < Cr; L++)
 				trial[(n+L)%(trial.length)] = mutants[i][(n+L)%(trial.length)];
-			}
-			trials[i]= trial;
-		}	
+		}
+		trials[i]= helpers.copyArray(trial);
 	}
-	
 	return trials;
 }
 
@@ -126,7 +117,8 @@ function DE(size, F, Cr, GEN, bounds, x, y, z, s, seed = Math.floor(Math.random(
 		var trials = recombination(population, mutants, Cr, z);
 		population = selection(population, trials);
 	}
-	console.log(findBest(population));
+	console.log(population);
+	console.log(helpers.findBest(population));
 }
 
 function of(vars){
