@@ -8,7 +8,7 @@ const helpers ={
 				bestIndex = i;
 			}
 		}
-		return population[bestIndex].vars;
+		return population[bestIndex];
 	},
 	copyArray : function(array){
 		let newArray = [];
@@ -18,82 +18,85 @@ const helpers ={
 	}
 }
 
+
 function initialization(size, bounds){
 	let population = [];
 	for(var i = 0; i < size; i++){
 		var varsVals = [];
 		population[i] = {};
-		for(var j = 0; j < bounds.length; j++){
+		for(var j = 0; j < bounds.length; j++)
 			varsVals[j] = rand.nextFloat() * (bounds[j].max - bounds[j].min) + bounds[j].min;
-		}
 		population[i].vars = helpers.copyArray(varsVals);
 		population[i].val = of(varsVals);
 	}
-	console.log(population);
 	return population;
+}
+
+function mutationSingle(population, individual, F, vector, numberOfVectors, firstElement, p){
+	let randomIndexes = [];
+	let index = 0;
+	while(randomIndexes.length < (numberOfVectors*2)+(vector === "rand" ? 1 : 0)){
+		randomIndex = parseInt(rand.nextFloat()*population.length);
+		if(randomIndex === p) continue;
+		let contained = false;
+		for(let i = 0, length = randomIndexes.length; i < length; i++){
+			if (randomIndexes[i] === randomIndex){
+				contained = true;
+				break;
+			}
+		}
+		if(!contained){
+			randomIndexes[index] = randomIndex;
+			index += 1;
+		}
+	}
+	let mutant = [];
+	if(vector === "rand") firstElement = helpers.copyArray(population[randomIndexes[randomIndexes.length-1]].vars);
+	else if(vector === "current-to-best"){
+		for (var i = 0; i < individual.length; i++)
+			firstElement[i] = individual[i] + F*(firstElement[i] - individual[i]);
+	}
+	for (var i = 0; i < individual.length; i++){
+		var sumRand = 0.0;
+		for (var j = 0; j < randomIndexes.length-1; j += 2)
+			sumRand += F*(population[randomIndexes[j]].vars[i] - population[randomIndexes[j+1]].vars[i]);
+		mutant[i] = firstElement[i] + sumRand;
+	}
+	return helpers.copyArray(mutant);
 }
 
 function mutation(population, F, vector, numberOfVectors){
 	let mutants = [];
-	let bestVector = [];
-	let randNum = 1;
-	if(vector !== "rand"){
-		bestVector = helpers.findBest(population);
-		randNum = 0;
-	}
-	for(let p = 0, length = population.length; p < length; p++){
-		let randomIndexes = [];
-		let index = 0;
-		while(randomIndexes.length < (numberOfVectors*2)+randNum){
-			randomIndex = parseInt(rand.nextFloat()*population.length);
-			if(randomIndex === p) continue;
-			let contained = false;
-			for(let i = 0, length = randomIndexes.length; i < length; i++){
-				if (randomIndexes[i] === randomIndex){
-					contained = true;
-					break;
-				}
-			}
-			if(!contained){
-				randomIndexes[index] = randomIndex;
-				index += 1;
-			}
-		}
-		let mutant = [];
-		let firstElement = [];
-		if(vector === "rand") firstElement = helpers.copyArray(population[randomIndexes[randomIndexes.length-1]].vars);
-		else if(vector === "best") firstElement = helpers.copyArray(bestVector);
-		else if(vector === "current-to-best"){
-			for (var i = 0; i < population[p].vars.length; i++)
-				firstElement[i] = population[p].vars[i] + F*(bestVector[i] - population[p].vars[i]);
-		}
-		for (var i = 0; i < population[0].vars.length; i++){
-			var sumRand = 0.0;
-			for (var j = 0; j < randomIndexes.length-1; j += 2)
-				sumRand += F*(population[randomIndexes[j]].vars[i] - population[randomIndexes[j+1]].vars[i]);
-			mutant[i] = firstElement[i] + sumRand;
-		}
-		mutants[p] = helpers.copyArray(mutant);
-	}
+	let firstElement = [];
+	if(vector !== "rand")
+		firstElement = helpers.copyArray(helpers.findBest(population).vars);
+	for(let p = 0, length = population.length; p < length; p++)
+		mutants[p] = mutationSingle(helpers.copyArray(population), helpers.copyArray(population[p].vars), F, vector, numberOfVectors, helpers.copyArray(firstElement), p);
 	return mutants;
 }
 
-function recombination(population, mutants, Cr, type){
-	var trials = [];
-	for(var i = 0; i < population.length; i++){
-		var trial = helpers.copyArray(population[i].vars);
-		if (type === "bin"){
-			var K = parseInt(rand.nextFloat()*population[i].vars.length);
-			for (var j = 0; j < population[i].vars.length; j++)
-				if(j === K || rand.nextFloat() <= Cr) trial[j] = mutants[i][j];	
-		}
-		else if(type === "exp"){
-			var n = parseInt(rand.nextFloat()*population[i].vars.length);
-			for (var L = 0; L < population[i].vars.length-1 && rand.nextFloat() < Cr; L++)
-				trial[(n+L)%(trial.length)] = mutants[i][(n+L)%(trial.length)];
-		}
-		trials[i]= helpers.copyArray(trial);
+function recombinationSingle(trial, mutant, Cr, type, limits){
+	if (type === "bin"){
+		var K = parseInt(rand.nextFloat()*trial.length);
+		for (var j = 0; j < trial.length; j++)
+			if(j === K || rand.nextFloat() <= Cr) trial[j] = mutant[j];	
 	}
+	else if(type === "exp"){
+		var n = parseInt(rand.nextFloat()*trial.length);
+		for (var L = 0; L < trial.length-1 && rand.nextFloat() < Cr; L++)
+			trial[(n+L)%(trial.length)] = mutant[(n+L)%(trial.length)];
+	}
+	for(let i = 0, length1 = trial.length; i < length1; i++){
+		if(trial[i] < limits[i].min) trial[i] = limits[i].min;
+		else if(trial[i] > limits[i].max) trial[i] = limits[i].max;
+	}
+	return helpers.copyArray(trial);
+}
+
+function recombination(population, mutants, Cr, type, limits){
+	var trials = [];
+	for(var i = 0; i < population.length; i++)
+		trials[i]= recombinationSingle(helpers.copyArray(population[i].vars), helpers.copyArray(mutants[i]), Cr, type, limits);
 	return trials;
 }
 
@@ -112,28 +115,46 @@ function DE(size, F, Cr, GEN, bounds, x, y, z, s, seed = Math.floor(Math.random(
 	rand = new Random(seed);
 	var population = initialization(size, bounds);
 	
-	for (var g = 0; g < GEN; g++){
-		var mutants = mutation(population, F, x, y);
-		var trials = recombination(population, mutants, Cr, z);
-		population = selection(population, trials);
+	if (s === "synch") {
+		for (var g = 0; g < GEN; g++){
+			var mutants = mutation(population, F, x, y);
+			var trials = recombination(population, mutants, Cr, z, bounds);
+			population = selection(population, trials);
+		}
+	}
+	else if (s === "asynch") {
+		for (var g = 0; g < GEN; g++){
+			for(let i = 0, length1 = population.length; i < length1; i++){
+				let firstElement = [];
+				if(x !== "rand")
+					firstElement = helpers.copyArray(helpers.findBest(population).vars);
+				var mutant = mutationSingle(helpers.copyArray(population), helpers.copyArray(population[i].vars), F, x, y, firstElement, i);
+				var trial = recombinationSingle(helpers.copyArray(population[i].vars), helpers.copyArray(mutant), Cr, z, bounds);
+				var ofValue = of(trial);
+				if(ofValue <= population[i].val){
+					population[i].val = ofValue;
+					population[i].vars = helpers.copyArray(trial);
+				}
+			}
+		}
 	}
 	console.log(population);
 	console.log(helpers.findBest(population));
 }
 
 function of(vars){
-	/*var phi = ((5*Math.sqrt(200)-50)/2);
-	var value = Math.sqrt(phi**2+vars[0]**2)/10 + 
-		Math.sqrt(100+(vars[1]-vars[0])**2)/9 + 
-		Math.sqrt(100+(vars[2]-vars[1])**2)/8 + 
-		Math.sqrt(100+(vars[3]-vars[2])**2)/7 + 
-		Math.sqrt(100+(vars[4]-vars[3])**2)/6 + 
-		Math.sqrt(100+(vars[5]-vars[4])**2)/5 +
-		Math.sqrt(phi**2+(5*Math.sqrt(200)-vars[5])**2)/10;
-	return value;*/
-	//return -1*Math.cos(vars[0])*Math.cos(vars[1])*Math.exp(-1*((vars[0]-Math.PI)**2+(vars[1]-Math.PI)**2));
-	//return Math.sin(3*Math.PI*vars[0])**2+((vars[0]-1)**2)*(1+Math.sin(3*Math.PI*vars[1])**2)+((vars[1]-1)**2)*(1+Math.sin(2*Math.PI*vars[1])**2);
-	return (vars[0]**2+vars[1]**2);
+	/*//cross-leg table
+	return (-1*(Math.abs(Math.sin(vars[0])*Math.sin(vars[1])*Math.E**Math.abs(100-((vars[0]**2+vars[1]**2)**0.5)/Math.PI))+1)**(-0.1));*/
+	
+	/*//rosenbrock
+	let sum = 0.0;
+	for(let i = 0, length1 = vars.length; i < length1; i++)
+		sum += vars[i]**2 - 10*Math.cos(2*Math.PI*vars[i]);
+	return (10*vars.length + sum);*/
+	
+	/*//sphere
+	return (vars[0]**2+vars[1]**2);*/
+	return (-(vars[1]+47)*Math.sin(Math.sqrt(Math.abs( (vars[0]/2)+(vars[1]+47)))) -vars[0]*Math.sin(Math.sqrt(Math.abs(vars[0]-(vars[1]+47) ))));
 }
 
 function Random(seed) {
@@ -144,7 +165,7 @@ Random.prototype.next = function () {
   return this._seed = this._seed * 16807 % 2147483647;
 };
 Random.prototype.nextFloat = function (opt_minOrMax, opt_max) {
-	return (this.next() - 1) / 2147483646;;
+	return (this.next() - 1) / 2147483646;
 };
 
 var rand = null;
