@@ -4,114 +4,17 @@
 	<title>Chess board coordinates trainer</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="icon" href="img/icons/icon-128.png" sizes="128x128" type="image/png">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="manifest" href="/manifest.json">
+	<meta charset="utf-8">
 </head>
 <body>
 	<span id="conf" onclick="openNav()">&#9965;</span>
 	<div id="coordinateContainer"><h3 id="coordinate"></h3></div>
 	<div id="clock" style="position: fixed; right: 5px;top:15px;"></div>
 	<div id="board">
-		<div class="row">
-			<div class="tile" id="A8" onclick="checa('A8')"></div>
-			<div class="tile" id="B8" onclick="checa('B8')"></div>
-			<div class="tile" id="C8" onclick="checa('C8')"></div>
-			<div class="tile" id="D8" onclick="checa('D8')"></div>
-			<div class="tile" id="E8" onclick="checa('E8')"></div>
-			<div class="tile" id="F8" onclick="checa('F8')"></div>
-			<div class="tile" id="G8" onclick="checa('G8')"></div>
-			<div class="tile" id="H8" onclick="checa('H8')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A7" onclick="checa('A7')"></div>
-			<div class="tile" id="B7" onclick="checa('B7')"></div>
-			<div class="tile" id="C7" onclick="checa('C7')"></div>
-			<div class="tile" id="D7" onclick="checa('D7')"></div>
-			<div class="tile" id="E7" onclick="checa('E7')"></div>
-			<div class="tile" id="F7" onclick="checa('F7')"></div>
-			<div class="tile" id="G7" onclick="checa('G7')"></div>
-			<div class="tile" id="H7" onclick="checa('H7')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A6" onclick="checa('A6')"></div>
-			<div class="tile" id="B6" onclick="checa('B6')"></div>
-			<div class="tile" id="C6" onclick="checa('C6')"></div>
-			<div class="tile" id="D6" onclick="checa('D6')"></div>
-			<div class="tile" id="E6" onclick="checa('E6')"></div>
-			<div class="tile" id="F6" onclick="checa('F6')"></div>
-			<div class="tile" id="G6" onclick="checa('G6')"></div>
-			<div class="tile" id="H6" onclick="checa('H6')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A5" onclick="checa('A5')"></div>
-			<div class="tile" id="B5" onclick="checa('B5')"></div>
-			<div class="tile" id="C5" onclick="checa('C5')"></div>
-			<div class="tile" id="D5" onclick="checa('D5')"></div>
-			<div class="tile" id="E5" onclick="checa('E5')"></div>
-			<div class="tile" id="F5" onclick="checa('F5')"></div>
-			<div class="tile" id="G5" onclick="checa('G5')"></div>
-			<div class="tile" id="H5" onclick="checa('H5')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A4" onclick="checa('A4')"></div>
-			<div class="tile" id="B4" onclick="checa('B4')"></div>
-			<div class="tile" id="C4" onclick="checa('C4')"></div>
-			<div class="tile" id="D4" onclick="checa('D4')"></div>
-			<div class="tile" id="E4" onclick="checa('E4')"></div>
-			<div class="tile" id="F4" onclick="checa('F4')"></div>
-			<div class="tile" id="G4" onclick="checa('G4')"></div>
-			<div class="tile" id="H4" onclick="checa('H4')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A3" onclick="checa('A3')"></div>
-			<div class="tile" id="B3" onclick="checa('B3')"></div>
-			<div class="tile" id="C3" onclick="checa('C3')"></div>
-			<div class="tile" id="D3" onclick="checa('D3')"></div>
-			<div class="tile" id="E3" onclick="checa('E3')"></div>
-			<div class="tile" id="F3" onclick="checa('F3')"></div>
-			<div class="tile" id="G3" onclick="checa('G3')"></div>
-			<div class="tile" id="H3" onclick="checa('H3')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A2" onclick="checa('A2')"></div>
-			<div class="tile" id="B2" onclick="checa('B2')"></div>
-			<div class="tile" id="C2" onclick="checa('C2')"></div>
-			<div class="tile" id="D2" onclick="checa('D2')"></div>
-			<div class="tile" id="E2" onclick="checa('E2')"></div>
-			<div class="tile" id="F2" onclick="checa('F2')"></div>
-			<div class="tile" id="G2" onclick="checa('G2')"></div>
-			<div class="tile" id="H2" onclick="checa('H2')"></div>
-		</div>
-		<div class="row">
-			<div class="tile" id="A1" onclick="checa('A1')"></div>
-			<div class="tile" id="B1" onclick="checa('B1')"></div>
-			<div class="tile" id="C1" onclick="checa('C1')"></div>
-			<div class="tile" id="D1" onclick="checa('D1')"></div>
-			<div class="tile" id="E1" onclick="checa('E1')"></div>
-			<div class="tile" id="F1" onclick="checa('F1')"></div>
-			<div class="tile" id="G1" onclick="checa('G1')"></div>
-			<div class="tile" id="H1" onclick="checa('H1')"></div>
-		</div>
-		<div id="letters">
-			<div class="tile">A</div>
-			<div class="tile">B</div>
-			<div class="tile">C</div>
-			<div class="tile">D</div>
-			<div class="tile">E</div>
-			<div class="tile">F</div>
-			<div class="tile">G</div>
-			<div class="tile">H</div>
-		</div>
-		<div id="numbers">
-			<div class="tile">8</div>
-			<div class="tile">7</div>
-			<div class="tile">6</div>
-			<div class="tile">5</div>
-			<div class="tile">4</div>
-			<div class="tile">3</div>
-			<div class="tile">2</div>
-			<div class="tile">1</div>
-		</div>
+		
 	</div>
 	
 	<div id="controls">
@@ -158,6 +61,18 @@
 					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="askColumns" checked>
 					    <label class="onoffswitch-label" for="askColumns">
 					        <span class="onoffswitch-inner"></span>
+					        <span class="onoffswitch-switch"></span>
+					    </label>
+					</div>
+	  			</td>
+	  		</tr>
+	  		<tr>
+	  			<td>Perspective </td>
+	  			<td>
+	  				<div class="onoffswitch">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="askPerspective" checked>
+					    <label class="onoffswitch-label" for="askPerspective">
+					        <span class="bl-wht-switch-inner"></span>
 					        <span class="onoffswitch-switch"></span>
 					    </label>
 					</div>

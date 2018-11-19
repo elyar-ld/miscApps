@@ -1,26 +1,51 @@
-//var board = document.getElementById('board');
-
-var letters = ['A','B','C','D','E','F','G','H'];
-
-var lightTile = true;
-for(var i = 8; i >= 1; i--){
-	for(var j = 0; j < 8; j++){
-		var x = parseInt(Math.random()*90);
-		var y = parseInt(Math.random()*90);
-		var tile = document.getElementById(letters[j]+i);
-		if(lightTile) tile.style.setProperty("background-image","url('img/light.jpg')");
-		else tile.style.setProperty("background-image","url('img/dark.jpg')");
-		tile.style.setProperty("background-position", x+"% "+y+"%");
-		lightTile = !lightTile;
-		if(j==7) lightTile = !lightTile;
-	}
-}
-
 var mainCounter = 0, correctCounter = 0;
 var playing = false;
 var coordinate = "";
 var time = 0;
 var clock;
+var letters = ['A','B','C','D','E','F','G','H'];
+var numbers = ['8','7','6','5','4','3','2','1'];
+
+function initBoard(){
+	let board = document.getElementById("board");
+	board.innerHTML = "<div id='letters'></div><div id='numbers'></div>";
+	for(var i = 0; i < 8; i++){
+		var newLine = "";
+		newLine += "<div class='row'>";
+		for(var j = 0; j < 8; j++)
+			newLine += "<div class='tile' id='"+(letters[j]+numbers[i])+"'onclick='"+"checa(&apos;"+(letters[j]+numbers[i])+"&apos;)''></div>";
+		newLine += "</div>";
+		board.innerHTML += newLine;
+	}
+	var lettersDiv = document.getElementById("letters");
+	var numbersDiv = document.getElementById("numbers");
+	for(var i = 0; i < 8; i++){
+		lettersDiv.innerHTML += "<div class='tile'>"+letters[i]+"</div>";
+		numbersDiv.innerHTML += "<div class='tile'>"+numbers[i]+"</div>";
+	}
+	var coordinateTags = document.getElementById("coordinatesTags");
+	if(coordinateTags.checked){
+		document.getElementById("letters").style.setProperty("display","initial");
+		document.getElementById("numbers").style.setProperty("display","initial");
+	}
+	else{
+		document.getElementById("letters").style.setProperty("display","none");
+		document.getElementById("numbers").style.setProperty("display","none");
+	}
+	var lightTile = true;
+	for(var i = 0; i < 8; i++){
+		for(var j = 0; j < 8; j++){
+			var x = parseInt(Math.random()*90);
+			var y = parseInt(Math.random()*90);
+			var tile = document.getElementById(letters[j]+numbers[i]);
+			if(lightTile) tile.style.setProperty("background-image","url('img/light.jpg')");
+			else tile.style.setProperty("background-image","url('img/dark.jpg')");
+			tile.style.setProperty("background-position", x+"% "+y+"%");
+			lightTile = !lightTile;
+			if(j==7) lightTile = !lightTile;
+		}
+	}
+}
 
 function myTimer(){
 	time -= 1;
@@ -60,6 +85,7 @@ function endGame(){
 }
 
 function checa(id){
+	console.log(id);
 	if(playing){
 		mainCounter += 1;
 		document.getElementById("answerImage").classList.toggle("fadeOut");
@@ -89,6 +115,10 @@ function disappearAnswer2(){
 	document.getElementById("answerImage").src = "";
 }
 
+//#################### INIT #####################
+initBoard();
+//###############################################
+
 document.getElementById("coordinatesTags").addEventListener("click", function(){
 	if(this.checked){
 		document.getElementById("letters").style.setProperty("display","initial");
@@ -98,6 +128,12 @@ document.getElementById("coordinatesTags").addEventListener("click", function(){
 		document.getElementById("letters").style.setProperty("display","none");
 		document.getElementById("numbers").style.setProperty("display","none");
 	}
+});
+
+document.getElementById("askPerspective").addEventListener("click", function(){
+	numbers = numbers.reverse();
+	letters = letters.reverse();
+	initBoard();
 });
 
 function openNav() {

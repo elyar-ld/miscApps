@@ -68,11 +68,12 @@
     display: block; overflow: hidden; cursor: pointer;
     border: 2px solid #999999; border-radius: 20px;
 }
-.onoffswitch-inner {
+.onoffswitch-inner, .bl-wht-switch-inner {
     display: block; width: 200%; margin-left: -100%;
     transition: margin 0.3s ease-in 0s;
 }
-.onoffswitch-inner:before, .onoffswitch-inner:after {
+
+.onoffswitch-inner:before, .onoffswitch-inner:after, .bl-wht-switch-inner:before, .bl-wht-switch-inner:after {
     display: block; float: left; width: 50%; height: 21px; padding: 0; line-height: 21px;
     font-size: 12px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
     box-sizing: border-box;
@@ -99,6 +100,23 @@
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
 }
+.onoffswitch-checkbox:checked + .onoffswitch-label .bl-wht-switch-inner {
+    margin-left: 0;
+}
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+
+.bl-wht-switch-inner:before {
+    content: "White";
+    padding-left: 2px;
+    background-color: #FFF; color: #000;
+    font-size: 10px;
+}
+.bl-wht-switch-inner:after {
+    content: "Black";
+    padding-right: 2px;
+    background-color: #000; color: #fff;
+    text-align: right;
+    font-size: 10px;
 }
